@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhz.smart.mapper.GroupMessageMapper">
+  <resultMap id="BaseResultMap" type="com.zhz.smart.model.GroupMessage">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="userid" jdbcType="BIGINT" property="userid" />
+    <result column="groupid" jdbcType="BIGINT" property="groupid" />
+    <result column="time" jdbcType="BIGINT" property="time" />
+  </resultMap>
+</mapper>
