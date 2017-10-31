@@ -1,5 +1,9 @@
 package com.zhz.smart.controller;
 
+import com.zhz.smart.model.DiscussMessage;
+import com.zhz.smart.model.GroupMessage;
+import com.zhz.smart.model.Message;
+import com.zhz.smart.util.SmartQQApi;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.slf4j.Logger;
@@ -10,12 +14,13 @@ import org.slf4j.LoggerFactory;
  * Created by zz1987 on 17/10/31.
  */
 public class SmartClient {
+
     Logger logger = LoggerFactory.getLogger(SmartClient.class);
 
     boolean pollStarted;
 
     public SmartClient(MessageCallback callback) {
-//        SmartQQApi.login();
+        SmartQQApi.login();
         if (callback != null) {
             this.pollStarted = true;
             new Thread(new Runnable() {
@@ -37,30 +42,30 @@ public class SmartClient {
     }
 
     public void pollMessage(MessageCallback callback){
-//        logger.info("开始接收消息");
-//        JSONObject r = new JSONObject();
-//        r.put("ptwebqq", SmartQQApi.ptwebqq);
-//        r.put("clientid", SmartQQApi.clientId);
-//        r.put("psessionid", SmartQQApi.psessionid);
-//        r.put("key", "");
-//
-//        String response = SmartQQApi.pullMessage(r);
-//        JSONArray array = getJsonArrayResult(response);
-//        for (int i = 0; array != null && i < array.size(); i++) {
-//            JSONObject message = array.getJSONObject(i);
-//            String type = message.getString("poll_type");
-//            JSONObject jsonMsg = message.getJSONObject("value");
-//            if ("message".equals(type)) {
-//                Message msg = new Message();
-//                callback.onMessage(msg);
-//            } else if ("group_message".equals(type)) {
-//                GroupMessage msg = new GroupMessage();
-//                callback.onGroupMessage(msg);
-//            } else if ("discu_message".equals(type)) {
-//                DiscussMessage msg = new DiscussMessage();
-//                callback.onDiscussMessage(msg);
-//            }
-//        }
+        logger.info("开始接收消息");
+        JSONObject r = new JSONObject();
+        r.put("ptwebqq", SmartQQApi.ptwebqq);
+        r.put("clientid", SmartQQApi.clientId);
+        r.put("psessionid", SmartQQApi.psessionid);
+        r.put("key", "");
+
+        String response = SmartQQApi.pullMessage(r);
+        JSONArray array = getJsonArrayResult(response);
+        for (int i = 0; array != null && i < array.size(); i++) {
+            JSONObject message = array.getJSONObject(i);
+            String type = message.getString("poll_type");
+            JSONObject jsonMsg = message.getJSONObject("value");
+            if ("message".equals(type)) {
+                Message msg = new Message();
+                callback.onMessage(msg);
+            } else if ("group_message".equals(type)) {
+                GroupMessage msg = new GroupMessage();
+                callback.onGroupMessage(msg);
+            } else if ("discu_message".equals(type)) {
+                DiscussMessage msg = new DiscussMessage();
+                callback.onDiscussMessage(msg);
+            }
+        }
     }
 
     private JSONArray getJsonArrayResult(String response) {

@@ -1,8 +1,9 @@
 package com.zhz.smart.controller;
 
-import com.zhz.robot.model.DiscussMessage;
-import com.zhz.robot.model.GroupMessage;
-import com.zhz.robot.model.Message;
+
+import com.zhz.smart.model.DiscussMessage;
+import com.zhz.smart.model.GroupMessage;
+import com.zhz.smart.model.Message;
 
 /**
  * Created by zz1987 on 17/10/31.
