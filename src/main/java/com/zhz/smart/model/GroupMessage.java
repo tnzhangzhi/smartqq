@@ -1,19 +1,26 @@
 package com.zhz.smart.model;
 
+import org.apache.solr.client.solrj.beans.Field;
+
 import javax.persistence.*;
 
 @Table(name = "group_message")
 public class GroupMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Field
     private Long id;
 
+    @Field
     private String content;
 
+    @Field("uid")
     private Long userid;
 
+    @Field("gid")
     private Long groupid;
 
+    @Field
     private Long time;
 
     /**

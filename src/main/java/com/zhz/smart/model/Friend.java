@@ -13,7 +13,7 @@ public class Friend {
 
     private Long userid;
 
-    private Byte vip;
+    private Integer vip;
 
     private Integer viplevel;
 
@@ -76,14 +76,14 @@ public class Friend {
     /**
      * @return vip
      */
-    public Byte getVip() {
+    public Integer getVip() {
         return vip;
     }
 
     /**
      * @param vip
      */
-    public void setVip(Byte vip) {
+    public void setVip(Integer vip) {
         this.vip = vip;
     }
 

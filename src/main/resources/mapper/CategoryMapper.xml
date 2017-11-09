@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhz.smart.mapper.CategoryMapper">
+  <resultMap id="BaseResultMap" type="com.zhz.smart.model.Category">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="index_num" jdbcType="INTEGER" property="indexNum" />
+  </resultMap>
+  <select id="selectByIndex" resultMap="BaseResultMap">
+    SELECT * from category where index_num=#{indexNum}
+  </select>
+</mapper>

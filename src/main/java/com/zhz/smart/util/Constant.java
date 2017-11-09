@@ -16,5 +16,15 @@ public class Constant {
     public static final String GROUP_LIST = "http://s.web2.qq.com/api/get_group_name_list_mask2";
     public static final String GROUP_LIST_REFERER = "http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1";
     public static final String GROUP_LIST_ORGIN = "http://s.web2.qq.com";
+    public static final String FRIEND_LIST = "http://s.web2.qq.com/api/get_user_friends2";
+    public static final String FRIEND_LIST_REFERER = "http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1";
+    public static final String FRIEND_LIST_ORGIN = "http://s.web2.qq.com";
+    public static final String DISCUSS_LIST = "http://s.web2.qq.com/api/get_discus_list?clientid=53999199&psessionid=PSESSIONID&vfwebqq=VFWEBQQ";
+    public static final String DISCUSS_LIST_REFERER = "http://s.web2.qq.com/proxy.html?v=20130916001&callback=1&id=1";
+    public static final String DISCUSS_LIST_ORGIN = "http://s.web2.qq.com";
+    public static final String POLL_MSG = "http://d1.web2.qq.com/channel/poll2";
+    public static final String POLL_MSG_REFERER = "http://d1.web2.qq.com/proxy.html?v=20151105001&callback=1&id=2";
+    public static final String POLL_MSG_ORIGIN = "http://d1.web2.qq.com";
+
     public static final String AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.100 Safari/537.36";
 }

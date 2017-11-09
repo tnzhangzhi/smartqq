@@ -18,7 +18,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,7 +46,7 @@ public class HttpUtil {
     private static void init(){
         context = HttpClientContext.create();
         cookieStore = new BasicCookieStore();
-        requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).setConnectTimeout(120000).setSocketTimeout(60000)
+        requestConfig = RequestConfig.custom().setCookieSpec(CookieSpecs.DEFAULT).setConnectTimeout(60000).setSocketTimeout(60000)
                 .setConnectionRequestTimeout(60000).build();
         context.setCookieStore(cookieStore);
         httpClient = HttpClients.custom()
@@ -53,8 +55,8 @@ public class HttpUtil {
                 .build();
     }
 
-    public static InputStream streamMethod(String url,String refer){
-        CloseableHttpResponse response = excute(url,refer);
+    public static InputStream streamMethod(String url,String refer,String origin){
+        CloseableHttpResponse response = excute(url,refer,origin);
         if(response!=null){
             try {
                 return response.getEntity().getContent();
@@ -66,8 +68,8 @@ public class HttpUtil {
         return null;
     }
 
-    public static String  stringMethod(String url,String refer){
-        CloseableHttpResponse response = excute(url,refer);
+    public static String  stringMethod(String url,String refer,String origin){
+        CloseableHttpResponse response = excute(url,refer,origin);
         if(response!=null){
             try {
                 return EntityUtils.toString(response.getEntity(),"utf-8");
@@ -79,11 +81,14 @@ public class HttpUtil {
         return null;
     }
 
-    public static CloseableHttpResponse excute(String url,String refer) {
+    public static CloseableHttpResponse excute(String url,String refer,String origin) {
         HttpGet httpGet = new HttpGet(url);
         httpGet.addHeader("user-agent", Constant.AGENT);
         if(refer!=null){
             httpGet.addHeader("referer",refer);
+        }
+        if(origin!=null){
+            httpGet.addHeader("origin",origin);
         }
         try {
             logger.info("Execute request: "+httpGet.getURI());
@@ -107,8 +112,11 @@ public class HttpUtil {
         List<NameValuePair> nvps = new ArrayList<>();
         nvps.add(new BasicNameValuePair("r", object.toString()));
         try {
+
             httpPost.setEntity(new UrlEncodedFormEntity(nvps));
-            CloseableHttpResponse response = httpClient.execute(httpPost, context);
+            CloseableHttpResponse response = null;
+            response = httpClient.execute(httpPost, context);
+
             for (Cookie c : context.getCookieStore().getCookies()) {
                 map.put(c.getName(),c.getValue());
             }
@@ -117,7 +125,7 @@ public class HttpUtil {
             }else{
                 logger.error("请求返回状态码:"+response.getStatusLine().getStatusCode());
             }
-        }catch (Exception e){
+        }catch (IOException e){
             logger.error("网络请求失败 {}",e.getMessage());
             e.printStackTrace();
         }

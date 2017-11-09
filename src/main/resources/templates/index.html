@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>my websocket</head>
+<body>
+<input id="text" type="text"/>
+<button onclick="send()">send</button>
+<button onclick="close()">close</button>
+<div id="message">
+
+</div>
+</body>
+<script type="text/javascript">
+    var websocket = null;
+    if('WebSocket' in window){
+        websocket = new WebSocket("ws://localhost:8000/websocket");
+    }else{
+        alert('Not support websocket');
+    }
+
+    websocket.onerror = function(){
+        setMessageInnerHTML("error");
+    }
+
+    websocket.onopen = function(event){
+        setMessageInnerHTML("open");
+    }
+
+    websocket.onmessage = function(event){
+        setMessageInnerHTML(event.data);
+    }
+
+    websocket.onclose = function(){
+        setMessageInnerHTML("close");
+    }
+
+    window.onbeforeunload = function(){
+        websocket.close();
+    }
+
+    function close(){
+        websocket.close();
+    }
+
+    function send(){
+        var msg = document.getElementById("text").value;
+        websocket.send(msg);
+    }
+
+    function setMessageInnerHTML(html){
+        document.getElementById("message").innerHTML=html;
+    }
+</script>
+</html>

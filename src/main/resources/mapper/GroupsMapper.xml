@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhz.smart.mapper.GroupsMapper">
+  <resultMap id="BaseResultMap" type="com.zhz.smart.model.Groups">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="flag" jdbcType="BIGINT" property="flag" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="BIGINT" property="code" />
+    <result column="gid" jdbcType="BIGINT" property="gid" />
+  </resultMap>
+  <select id="selectByGid" resultMap="BaseResultMap">
+    SELECT * from groups where gid=#{gid}
+  </select>
+</mapper>

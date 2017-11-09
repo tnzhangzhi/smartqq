@@ -20,44 +20,83 @@ public class SmartQQApi {
     public static String psessionid;
     public static final long clientId=53999199L;
     public static String pturl;
+    public static boolean is_login = false;
 
 
     static Logger logger = LoggerFactory.getLogger(SmartQQApi.class);
 
     public static boolean login(){
-        index();
-        cgiLogin();
-        getQrCode(null);
-        boolean result =  checkLogin();
-        getPtwebqq();
-        getVfwebqq();
-        getUinAndPsessionid();
-        getGroupList();
-        return result;
+        if(!is_login) {
+            index();
+            cgiLogin();
+            getQrCode(null);
+            boolean result = checkLogin();
+            if (result) {
+                getPtwebqq();
+                getVfwebqq();
+                getUinAndPsessionid();
+                is_login = true;
+            }
+            return result;
+        }
+        return true;
     }
 
     public static String getGroupList() {
+        boolean flag = login();
         logger.info("开始获取群列表");
+        if(flag) {
+            JSONObject r = new JSONObject();
+            r.put("vfwebqq", vfwebqq);
+            r.put("hash", hash());
 
-        JSONObject r = new JSONObject();
-        r.put("vfwebqq", vfwebqq);
-        r.put("hash", hash());
+            String result = HttpUtil.post(Constant.GROUP_LIST, Constant.GROUP_LIST_REFERER, Constant.GROUP_LIST_ORGIN, r);
+            logger.info(result);
+            return result;
+        }
+        return null;
+    }
 
-        String result = HttpUtil.post(Constant.GROUP_LIST,Constant.GROUP_LIST_REFERER,Constant.GROUP_LIST_ORGIN, r);
-        logger.info(result);
-        return result;
+    public static String getFriends(){
+        boolean flag = login();
+        logger.info("开始获取好友列表");
+        if(flag) {
+            JSONObject r = new JSONObject();
+            r.put("vfwebqq", vfwebqq);
+            r.put("hash", hash());
+
+            String result = HttpUtil.post(Constant.FRIEND_LIST, Constant.FRIEND_LIST_REFERER, Constant.FRIEND_LIST_ORGIN, r);
+            logger.info(result);
+            return result;
+        }
+        return null;
+    }
+
+    public static String getDiscuss(){
+        boolean flag = login();
+        logger.info("开始获取讨论组列表");
+        if(flag) {
+            JSONObject r = new JSONObject();
+            r.put("vfwebqq", vfwebqq);
+            r.put("hash", hash());
+            String url = Constant.DISCUSS_LIST.replace("PSESSIONID",psessionid).replace("VFWEBQQ",vfwebqq);
+            String result = HttpUtil.stringMethod(url, Constant.DISCUSS_LIST_REFERER, Constant.DISCUSS_LIST_ORGIN);
+            logger.info(result);
+            return result;
+        }
+        return null;
     }
 
     public static void getPtwebqq(){
         logger.info("开始获取ptwebqq");
-        HttpUtil.excute(pturl,Constant.GROUP_LIST_REFERER);
+        HttpUtil.excute(pturl,Constant.GROUP_LIST_REFERER,null);
         ptwebqq = HttpUtil.map.get("ptwebqq");
     }
 
     public static void getVfwebqq(){
         logger.info("开始获取vfwebqq");
 //        String url = Constant.VF_URL.replace("PTWEBQQ",ptwebqq);
-        String result = HttpUtil.stringMethod(Constant.VF_URL,Constant.VF_REFERER);
+        String result = HttpUtil.stringMethod(Constant.VF_URL,Constant.VF_REFERER,null);
         JSONObject object = JSONObject.fromObject(result);
         vfwebqq= object.getJSONObject("result").getString("vfwebqq");
     }
@@ -75,17 +114,29 @@ public class SmartQQApi {
         uin = object2.getJSONObject("result").getLong("uin");
     }
 
-    public static String pullMessage(JSONObject object){
+    public static String pullMessage(){
+        boolean flag = login();
+        logger.info("拉取消息。。。");
+        if(flag) {
+            JSONObject r = new JSONObject();
+            r.put("ptwebqq", "");
+            r.put("clientid", SmartQQApi.clientId);
+            r.put("psessionid", SmartQQApi.psessionid);
+            r.put("key", "");
 
+            String result = HttpUtil.post(Constant.POLL_MSG, Constant.POLL_MSG_REFERER, Constant.POLL_MSG_ORIGIN, r);
+            logger.info(result);
+            return result;
+        }
         return null;
     }
 
     public static void cgiLogin(){
-        HttpUtil.excute(Constant.CGI,Constant.INDEX);
+        HttpUtil.excute(Constant.CGI,Constant.INDEX,null);
     }
 
     public static void index(){
-        HttpUtil.excute(Constant.INDEX,null);
+        HttpUtil.excute(Constant.INDEX,null,null);
     }
 
     public static void getQrCode(String path){
@@ -95,7 +146,7 @@ public class SmartQQApi {
         File file = new File(path);
         try {
             file.createNewFile();
-            InputStream is = HttpUtil.streamMethod(Constant.QR_CODE,Constant.CGI);
+            InputStream is = HttpUtil.streamMethod(Constant.QR_CODE,Constant.CGI,null);
             if(is != null) {
                 OutputStream out = new FileOutputStream(file);
                 int bytesRead;
@@ -127,7 +178,7 @@ public class SmartQQApi {
                     break;
                 }
                 url = url.replace("TOKEN", hash3(token)+"");
-                String result = HttpUtil.stringMethod(url, Constant.CGI);
+                String result = HttpUtil.stringMethod(url, Constant.CGI,null);
                 if(result.contains("登录成功")){
                     success = true;
                     for (String content : result.split("','")) {
